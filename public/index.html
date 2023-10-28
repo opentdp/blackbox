@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+
+<head>
+    <title>Open Translator</title>
+    <meta charset="utf-8" />
+    <!-- empty csp -->
+    <meta http-equiv="Content-Security-Policy" />
+    <!-- viewport-fix -->
+    <meta name="viewport" content="viewport-fit=cover,width=device-width,initial-scale=1,user-scalable=no" />
+    <!-- browser webapp style -->
+    <meta name="theme-color" content="#1b86ca" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- static css files -->
+    <link rel="icon" type="image/png" href="assets/icon.png" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap-icons/bootstrap-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/style.css?v1.127" />
+    <!-- static js files -->
+    <script type="text/javascript" src="assets/bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="assets/vue-global/vue.global.js"></script>
+    <script type="text/javascript" src="assets/vue-global/vue-router.global.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar sticky-top bg-body-tertiary mb-2">
+            <div class="container-xxl">
+                <a class="navbar-brand" href="./" title="OpenTDP 开放拨测集群">
+                    <img src="assets/icon.png" height="26">
+                    &nbsp; 开放拨测集群
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="app" class="container-xxl main py-3">
+        <h3>节点状态</h3>
+        <table class="table table-striped table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">节点名</th>
+                    <th scope="col">贡献者</th>
+                    <th scope="col">所在地</th>
+                    <th scope="col">运营商</th>
+                    <th scope="col">入流量</th>
+                    <th scope="col">出流量</th>
+                    <th scope="col">状态</th>
+                    <th scope="col">备注</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                <tr v-for="(node, name, index) in nodes">
+                    <td>{{node.name}}</td>
+                    <td>{{node.owner}}</td>
+                    <td>{{node.region}}</td>
+                    <td>{{node.isp}}</td>
+                    <td>{{node.todayTrafficIn}}</td>
+                    <td>{{node.todayTrafficOut}}</td>
+                    <td>{{node.status}}</td>
+                    <td>{{node.banner}}</td>
+                </tr>
+            </tbody>
+        </table>
+        <div>
+            <h3>注册须知</h3>
+            <p>这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 列表，运行前请确认知晓自己在做什么。
+            <ul>
+                <li>目前仅用于测试，请不要在生产环境中使用</li>
+                <li>你的节点将分享给其他注册节点的用户</li>
+                <li>你将可以使用其他用户注册的节点</li>
+            </ul>
+
+            <h3>加入节点方法</h3>
+            <p>
+                修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 列表。
+                参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
+            </p>
+
+            <pre><code>
+docker run -d \
+    --name blackbox \
+    --restart always \
+    --publish 9115:9115 \
+    --env "NODE_NAME=your-node-name" \
+    --env "NODE_OWNER=your-nickname" \
+    --env "NODE_REGION=your-city" \
+    --env "NODE_ISP=your-isp" \
+    --env "NODE_BANNER=your-banner" \
+    rehiy/blackbox
+
+# 查看日志
+docker logs -f blackbox
+                </code></pre>
+
+            <h3>环境变量说明</h3>
+            <p>请不要在环境变量中添加`;`或其他特殊字符，否则可能导致无法正常运行。</p>
+            <ul>
+                <li><b>NODE_NAME</b>：以自己英文名开头，仅支持英文小写、短横线、数字（不超过20byte）</li>
+                <li><b>NODE_OWNER</b>：所有者昵称（utf-8编码，不超过30byte）</li>
+                <li><b>NODE_REGION</b>：国家或地区/省份/城市（utf-8编码，不超过30byte）</li>
+                <li><b>NODE_ISP</b>：运营商/云厂商（utf-8编码，不超过30byte）</li>
+                <li><b>NODE_BANNER</b>：自定义说明（utf-8编码，不超过30byte）</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
+        <div class="container-xxl py-2 py-md-3 text-body-secondary">
+            <img class="mb-3" src="assets/logo.png" alt="OpenTDP" height="60">
+            <div class="mb-2">开放、共建、共享的拨测集群</div>
+            <div>前端界面由<a href="https://www.rehiy.com">若海</a>基于 Bootstrap&Vue 构建</div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        Vue.createApp({
+            data() {
+                return {
+                    messages: [],
+                    nodes: {},
+                }
+            },
+            created() {
+                this.get_nodes();
+                window.addEventListener('message', e => {
+                    e.data.content && this.createMessage(e.data);
+                });
+                window.addEventListener('unhandledrejection', e => {
+                    this.createMessage({ content: e.reason, type: 'error' });
+                    e.preventDefault && e.preventDefault();
+                });
+            },
+            methods: {
+                get_nodes() {
+                    const url = '/api/nodes';
+                    fetch(url).then(r => r.json()).then(data => {
+                        this.nodes = data;
+                    });
+                },
+                createMessage(data) {
+                    this.messages.push({
+                        index: Date.now(), type: 'success', ...data
+                    });
+                },
+                removeMessage(idx) {
+                    this.messages = this.messages.filter(m => m.index !== idx);
+                }
+            }
+        }).mount('#app')
+    </script>
+
+</body>
+
+</html>
