@@ -38,7 +38,7 @@
 
     <div id="app" class="container-xxl main py-3">
         <div>
-            <p>以下为注册到 OpenTDP Blackbox 服务的节点状态。如果你有正在吃灰的服务器，也可以参考页面底部的教程加入我们。</p>
+            <p>以下为注册到 OpenTDP Blackbox 服务的节点状态。如果你有正在吃灰的服务器，也可以按照页面底部的方法加入我们。</p>
         </div>
 
         <h3>节点状态 ({{Object.keys(nodes).length}})</h3>
@@ -71,7 +71,7 @@
 
         <div>
             <h3>注册须知</h3>
-            <p>这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 列表，运行前请确认知晓自己在做什么。
+            <p>这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 服务，运行前请确认知晓自己在做什么。
             <ul>
                 <li>目前仅用于测试，请不要在生产环境中使用</li>
                 <li>你的节点将分享给其他注册节点的用户</li>
@@ -80,7 +80,7 @@
 
             <h3>注册你的节点</h3>
             <p>
-                修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 列表。
+                修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 服务。
                 参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
             </p>
 
@@ -96,9 +96,9 @@ docker run -d \
     --env "NODE_BANNER=your-banner" \
     rehiy/blackbox
 
-# 查看日志
+# 查看注册日志
 docker logs -f blackbox
-                </code></pre>
+            </code></pre>
 
             <h3>环境变量说明</h3>
             <p>请不要在环境变量中添加`;`或其他特殊字符，否则可能导致无法正常运行。</p>
@@ -129,7 +129,6 @@ docker logs -f blackbox
                 }
             },
             created() {
-                this.get_nodes();
                 window.addEventListener('message', e => {
                     e.data.content && this.createMessage(e.data);
                 });
@@ -137,6 +136,9 @@ docker logs -f blackbox
                     this.createMessage({ content: e.reason, type: 'error' });
                     e.preventDefault && e.preventDefault();
                 });
+                // every 60 seconds
+                setInterval(() => this.get_nodes(), 60000);
+                this.get_nodes();
             },
             methods: {
                 get_nodes() {

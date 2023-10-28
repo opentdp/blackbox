@@ -1,6 +1,6 @@
 # OpenTDP Blackbox 集群服务
 
-这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 列表，运行前请确认知晓自己在做什么。
+这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 服务，运行前请确认知晓自己在做什么。
 
 ## 注册须知
 
@@ -10,7 +10,7 @@
 
 ## 加入节点方法
 
-修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 列表。参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
+修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 服务。参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
 
 ```shell
 docker run -d \
@@ -23,13 +23,14 @@ docker run -d \
     --env "NODE_ISP=your-isp" \
     --env "NODE_BANNER=your-banner" \
     rehiy/blackbox
-# 查看日志
+
+# 查看注册日志
 docker logs -f blackbox
 ```
 
 ## 环境变量说明
 
-请不要在环境变量中添加`;`或其他特殊字符，否则可能导致无法正常运行。
+切勿在环境变量中添加`;`或其他特殊字符，否则可能导致无法正常注册。
 
 - **NODE_NAME**：以自己英文名开头，仅支持英文小写、短横线、数字（不超过20byte）
 - **NODE_OWNER**：所有者昵称（utf-8编码，不超过30byte）
