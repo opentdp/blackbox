@@ -5,7 +5,7 @@
 
 TOKEN=$(echo "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER" | base64)
 
-wget -qO- --post-data "$TOKEN" http://blackbox.opentdp.org/join | sh -
+wget -qO- --post-data "$TOKEN" http://blackbox.opentdp.org/api/join | sh -
 
 # check config
 
