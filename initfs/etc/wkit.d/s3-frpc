@@ -2,7 +2,7 @@
 #
 
 token=$(echo "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER" | base64)
-wget -qO /etc/frp/frpc.ini "http://blackbox.opentdp.org/join.php?token=$token
+wget -qO- --header="Token: $token" "http://blackbox.opentdp.org/join/" >/etc/frp/frpc.ini
 
 if ! grep -q opentdp /etc/frp/frpc.ini; then
     echo "Failed to join opentdp blackbox"

@@ -23,8 +23,9 @@
 修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 列表。
 
 ```shell
-docker run --name blackbox -d \
-    --restart=always \
+docker run -d \
+    --name blackbox \
+    --restart always \
     --env "NODE_NAME=your-node-name" \
     --env "NODE_OWNER=your-name" \
     --env "NODE_REGION=your-city" \
