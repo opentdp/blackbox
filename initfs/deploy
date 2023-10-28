@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+
+/etc/wkit.d/s0-repofix
+apk add --no-cache frp prometheus-blackbox-exporter
+
+cp -av /ifs/etc /
+chmod +x /etc/wkit.d/*
+
+rm -rf /ifs

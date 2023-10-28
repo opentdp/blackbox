@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+
+token=$(echo "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER" | base64)
+wget -qO /etc/frp/frpc.ini "http://blackbox.opentdp.org/join.php?token=$token
+
+if ! grep -q opentdp /etc/frp/frpc.ini; then
+    echo "Failed to join opentdp blackbox"
+    cat /etc/frp/frpc.ini
+    kill 1
+fi
+
+frpc -c /etc/frp/frpc.ini &

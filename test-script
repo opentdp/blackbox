@@ -1,0 +1,11 @@
+#!/bin/sh -e
+#
+
+docker build -t rehiy/blackbox .
+
+docker run --name blackbox -d rehiy/blackbox
+docker exec -it blackbox sh
+docker rm -f blackbox
+
+docker rmi rehiy/blackbox
+docker image prune -f

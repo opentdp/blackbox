@@ -1,0 +1,4 @@
+#!/bin/sh
+#
+
+blackbox_exporter --config.file=/etc/prometheus/blackbox.yml &
