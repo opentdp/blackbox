@@ -10,7 +10,9 @@
 
 ## 加入节点方法
 
-修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 服务。参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
+修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 服务。
+
+参数 `--publish 9115:9115` 并不是必须的，这决于该节点是否仍需要为其它 Prometheus 提供服务，如果不需要请删除它。
 
 ```shell
 docker run -d \
