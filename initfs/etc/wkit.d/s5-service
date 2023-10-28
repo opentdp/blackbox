@@ -3,7 +3,7 @@
 
 if ! grep -q opentdp /etc/frp/frpc.ini; then
     echo "Failed to join OpenTDP Blackbox"
-    sleep 60
+    sleep 120
     kill 1
 fi
 
