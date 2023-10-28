@@ -2,7 +2,7 @@
 <html dir="ltr" lang="zh-CN">
 
 <head>
-    <title>Open Translator</title>
+    <title>OpenTDP 拨测集群</title>
     <meta charset="utf-8" />
     <!-- empty csp -->
     <meta http-equiv="Content-Security-Policy" />
@@ -13,14 +13,14 @@
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <!-- static css files -->
-    <link rel="icon" type="image/png" href="assets/icon.png" />
-    <link rel="stylesheet" type="text/css" href="assets/bootstrap/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="assets/bootstrap-icons/bootstrap-icons.min.css" />
-    <link rel="stylesheet" type="text/css" href="assets/style.css?v1.127" />
+    <link rel="icon" type="image/png" href="/static/icon.png" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-icons/bootstrap-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.127" />
     <!-- static js files -->
-    <script type="text/javascript" src="assets/bootstrap/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="assets/vue-global/vue.global.js"></script>
-    <script type="text/javascript" src="assets/vue-global/vue-router.global.js"></script>
+    <script type="text/javascript" src="/static/bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/vue-global/vue.global.js"></script>
+    <script type="text/javascript" src="/static/vue-global/vue-router.global.js"></script>
 </head>
 
 <body>
@@ -29,7 +29,7 @@
         <nav class="navbar sticky-top bg-body-tertiary mb-2">
             <div class="container-xxl">
                 <a class="navbar-brand" href="./" title="OpenTDP 开放拨测集群">
-                    <img src="assets/icon.png" height="26">
+                    <img src="/static/icon.png" height="26">
                     &nbsp; 开放拨测集群
                 </a>
             </div>
@@ -37,7 +37,7 @@
     </header>
 
     <div id="app" class="container-xxl main py-3">
-        <h3>节点状态</h3>
+        <h3>节点状态 ({{Object.keys(nodes).length}})</h3>
         <table class="table table-striped table-hover">
             <thead class="table-light">
                 <tr>
@@ -73,7 +73,7 @@
                 <li>你将可以使用其他用户注册的节点</li>
             </ul>
 
-            <h3>加入节点方法</h3>
+            <h3>注册你的节点</h3>
             <p>
                 修改环境变量后运行如下命令，注册你的节点到 OpenTDP Blackbox 列表。
                 参数 `--publish 9115:9115` 并不是必须的，取决于该节点是否仍需要为其它 Prometheus 提供服务。
@@ -109,7 +109,7 @@ docker logs -f blackbox
 
     <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
         <div class="container-xxl py-2 py-md-3 text-body-secondary">
-            <img class="mb-3" src="assets/logo.png" alt="OpenTDP" height="60">
+            <img class="mb-3" src="/static/logo.png" alt="OpenTDP" height="60">
             <div class="mb-2">开放、共建、共享的拨测集群</div>
             <div>前端界面由<a href="https://www.rehiy.com">若海</a>基于 Bootstrap&Vue 构建</div>
         </div>
