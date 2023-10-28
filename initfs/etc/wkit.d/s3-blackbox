@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+
+# pull config
+
+TOKEN=$(echo "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER" | base64)
+
+wget -qO- --post-data "$TOKEN" http://blackbox.opentdp.org/join | sh -
+
+# check config
+
+if ! grep -q opentdp /etc/frp/frpc.ini; then
+    echo "> Failed to join OpenTDP Blackbox"
+    echo "> Restarting in 2 minutes"
+    sleep 120
+    kill 1
+fi
+
+# start services
+
+frpc -c /etc/frp/frpc.ini &
+blackbox_exporter --config.file=/etc/prometheus/blackbox.yml &
