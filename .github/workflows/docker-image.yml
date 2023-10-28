@@ -14,9 +14,6 @@ jobs:
         with:
           submodules: "true"
 
-      - name: Prepare environment
-        run: sh docker/prepare.sh
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
@@ -32,7 +29,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./docker
+          context: .
           push: true
           platforms: linux/amd64,linux/arm64,linux/arm
           tags: rehiy/blackbox:latest
