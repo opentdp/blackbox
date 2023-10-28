@@ -18,7 +18,7 @@ docker run -d \
     --restart always \
     --publish 9115:9115 \
     --env "NODE_NAME=your-node-name" \
-    --env "NODE_OWNER=your-name" \
+    --env "NODE_OWNER=your-nickname" \
     --env "NODE_REGION=your-city" \
     --env "NODE_ISP=your-isp" \
     --env "NODE_BANNER=your-banner" \
@@ -29,10 +29,10 @@ docker logs -f blackbox
 
 ## 环境变量说明
 
-请不要在环境变量中添加任何标点符号或特殊字符，否则可能导致无法正常运行。
+请不要在环境变量中添加`;`或其他特殊字符，否则可能导致无法正常运行。
 
-- NODE_NAME: 10-20符串，将用于注册子域名，支持数字、小写英文、短横线
-- NODE_OWNER: 所有者昵称，支持数字、英文、中文（utf-8编码）
-- NODE_REGION: 省份或城市，支持数字、英文、中文（utf-8编码）
-- NODE_ISP: 运营商或云厂商，支持数字、英文、中文（utf-8编码）
-- NODE_BANNER: 自定义说明，支持数字、英文、中文（utf-8编码）
+- **NODE_NAME**：以自己英文名开头，仅支持英文小写、短横线、数字（不超过20byte）
+- **NODE_OWNER**：所有者昵称（utf-8编码，不超过30byte）
+- **NODE_REGION**：国家或地区/省份/城市（utf-8编码，不超过30byte）
+- **NODE_ISP**：运营商/云厂商（utf-8编码，不超过30byte）
+- **NODE_BANNER**：自定义说明（utf-8编码，不超过30byte）
