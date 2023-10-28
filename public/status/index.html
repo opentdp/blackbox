@@ -37,33 +37,38 @@
     </header>
 
     <div id="app" class="container-xxl main py-3">
+        <div>
+            <p>以下为注册到 OpenTDP Blackbox 服务的节点状态。如果你有正在吃灰的服务器，也可以参考页面底部的教程加入我们。</p>
+        </div>
+
         <h3>节点状态 ({{Object.keys(nodes).length}})</h3>
         <table class="table table-striped table-hover">
             <thead class="table-light">
                 <tr>
                     <th scope="col">节点名</th>
-                    <th scope="col">贡献者</th>
+                    <th scope="col" class="d-none d-sm-table-cell">贡献者</th>
                     <th scope="col">所在地</th>
-                    <th scope="col">运营商</th>
-                    <th scope="col">入流量</th>
-                    <th scope="col">出流量</th>
+                    <th scope="col" class="d-none d-sm-table-cell">运营商</th>
+                    <th scope="col" class="d-none d-md-table-cell">入流量</th>
+                    <th scope="col" class="d-none d-md-table-cell">出流量</th>
                     <th scope="col">状态</th>
-                    <th scope="col">备注</th>
+                    <th scope="col" class="d-none d-lg-table-cell">备注</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
                 <tr v-for="(node, name, index) in nodes">
                     <td>{{node.name}}</td>
-                    <td>{{node.owner}}</td>
+                    <td class="d-none d-sm-table-cell">{{node.owner}}</td>
                     <td>{{node.region}}</td>
-                    <td>{{node.isp}}</td>
-                    <td>{{node.todayTrafficIn}}</td>
-                    <td>{{node.todayTrafficOut}}</td>
-                    <td>{{node.status}}</td>
-                    <td>{{node.banner}}</td>
+                    <td class="d-none d-sm-table-cell">{{node.isp}}</td>
+                    <td class="d-none d-md-table-cell">{{node.todayTrafficIn}}</td>
+                    <td class="d-none d-md-table-cell">{{node.todayTrafficOut}}</td>
+                    <td :class="{'text-danger': node.status == 'offline'}">{{node.status}}</td>
+                    <td class="d-none d-lg-table-cell">{{node.banner}}</td>
                 </tr>
             </tbody>
         </table>
+
         <div>
             <h3>注册须知</h3>
             <p>这将通过 Frp Client 注册一个 Blackbox 节点到 OpenTDP Blackbox 列表，运行前请确认知晓自己在做什么。
