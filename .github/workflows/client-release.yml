@@ -12,14 +12,17 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v4
         with:
-          go-version: 1.20
+          go-version: 1.21
 
       - name: Build client binary
-        run: cd ./client && sh build.sh
+        run: |
+          cd ./client && sh build.sh
 
       - name: Create github release
         uses: softprops/action-gh-release@v1
@@ -48,7 +51,8 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Copy tdp-blacbox-linux-*.gz
-        run: cp ./client/build/tdp-blacbox-linux-*.gz ./client/docker/
+        run: |
+          cp ./client/build/tdp-blacbox-linux-*.gz ./client/docker/
 
       - name: Docker build and push
         uses: docker/build-push-action@v4

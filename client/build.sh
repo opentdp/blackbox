@@ -9,24 +9,19 @@ set -o noglob
 export CGO_ENABLED=0
 export GO111MODULE=on
 
-build() {
-    echo building for $1/$2
-    out=build/tdp-blackbox-$1-$2$3
-    GOOS=$1 GOARCH=$2 go build -ldflags="-s -w" -o $out main.go
-}
+export os_all="linux windows darwin freebsd"
+export arch_all="386 amd64 arm arm64 mips64 mips64le mips mipsle riscv64"
 
-####################################################################
-
-build android arm64
-
-build darwin amd64
-build darwin arm64
-
-build linux amd64
-build linux arm64
-
-build windows amd64 .exe
-build windows arm64 .exe
+for os in $os_all; do
+    for arch in $arch_all; do
+        echo building for $os/$arch
+        target=build/tdp-blackbox-$os-$arch
+        if [ x"$os" = x"windows" ]; then
+            target="${target}.exe"
+        fi
+        GOOS=$os GOARCH=$arch go build -ldflags="-s -w" -o $target main.go
+    done
+done
 
 ####################################################################
 
