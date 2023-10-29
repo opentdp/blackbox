@@ -18,18 +18,18 @@ jobs:
         with:
           go-version: 1.20
 
-      - name: Build go binary
-        run: sh build.sh
+      - name: Build client binary
+        run: cd ./client && sh build.sh
 
       - name: Create github release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          body_path: RELEASE.md
+          body_path: ./client/RELEASE.md
           draft: false
           prerelease: false
           files: |
-            ./build/*
+            ./client/build/*
 
       ###
 
@@ -48,12 +48,12 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Copy tdp-blacbox-linux-*.gz
-        run: cp ./build/tdp-blacbox-linux-*.gz ./docker/
+        run: cp ./client/build/tdp-blacbox-linux-*.gz ./client/docker/
 
       - name: Docker build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./docker
+          context: ./client/docker
           push: true
           platforms: linux/amd64,linux/arm64
           tags: rehiy/blacbox:latest

@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"encoding/base64"
@@ -6,42 +6,10 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
-
-	"blackbox-node/cmd/frpc"
-	"blackbox-node/cmd/prober"
 )
 
-func main() {
-	token := "2;"
-	if len(os.Args) > 1 {
-		token = os.Args[1]
-	}
-	etcPath := os.TempDir()
-	if len(os.Args) > 2 {
-		etcPath = os.Args[2]
-	}
-	if token == "--config" {
-		frpc.Start()
-		return
-	}
-	if token == "--config.file" {
-		prober.Start()
-		return
-	}
-	if err := joinCluster(token, etcPath); err != nil {
-		panic(err)
-	}
-	if binPath, err := os.Executable(); err == nil {
-		go frpcStart(binPath, etcPath)
-		proberStart(binPath, etcPath)
-	} else {
-		panic(err)
-	}
-}
-
-func joinCluster(token, etcPath string) error {
+func Join(token, etcPath string) error {
 	body, err := apiPost("/api/join", "2;"+token)
 	if err != nil {
 		return err
@@ -59,26 +27,6 @@ func joinCluster(token, etcPath string) error {
 		return err
 	}
 	return nil
-}
-
-func frpcStart(binPath, etcPath string) {
-	cmd := exec.Command(binPath, "--config", etcPath+"/frpc.toml")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Start(); err != nil {
-		panic(err)
-	}
-	cmd.Wait()
-}
-
-func proberStart(binPath, etcPath string) {
-	cmd := exec.Command(binPath, "--config.file", etcPath+"/prober.yml")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Start(); err != nil {
-		panic(err)
-	}
-	cmd.Wait()
 }
 
 func apiPost(url, textData string) (string, error) {

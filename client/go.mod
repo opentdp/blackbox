@@ -1,4 +1,4 @@
-module blackbox-node
+module github.com/opentdp/blackbox/client
 
 go 1.20
 
