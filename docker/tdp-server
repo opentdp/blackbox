@@ -1,0 +1,4 @@
+#!/bin/sh
+#
+
+exec tdp-blackbox "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER"
