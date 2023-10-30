@@ -1,11 +1,9 @@
 name: TDP Blackbox Docker Push
 
 on:
-  release:
-    types: [released]
   push:
     paths:
-    - 'client/docker/**'
+      - 'client/docker/**'
 
 jobs:
   build:
