@@ -1,6 +1,8 @@
 *.log
 
 client/build/
+client/frpc.toml
+client/prober.yml
 
 public/nodes/
 public/api/join*
