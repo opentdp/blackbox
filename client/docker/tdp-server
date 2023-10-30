@@ -1,5 +1,7 @@
 #!/bin/sh
 #
 
+set | grep NODE
+
 tdp-blackbox
 sleep 120
