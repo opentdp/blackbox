@@ -7,7 +7,7 @@ RUN sh /ifs/deploy
 
 FROM alpine
 
-LABEL version="v0.2.1" \
+LABEL version="v0.2.2" \
     maintainer="wang@rehiy.com"
 
 COPY --from=builder /usr/local/bin/tdp-* /usr/local/bin/
