@@ -31,7 +31,6 @@ build freebsd arm64
 
 build linux 386
 build linux amd64
-build linux armv7
 build linux arm64
 build linux mips
 build linux mipsle
