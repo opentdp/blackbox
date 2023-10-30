@@ -51,6 +51,7 @@
                     <th scope="col" class="d-none d-sm-table-cell">运营商</th>
                     <th scope="col" class="d-none d-md-table-cell">入流量</th>
                     <th scope="col" class="d-none d-md-table-cell">出流量</th>
+                    <th scope="col" class="d-none d-lg-table-cell">版本号</th>
                     <th scope="col">状态</th>
                     <th scope="col" class="d-none d-lg-table-cell">备注</th>
                 </tr>
@@ -63,6 +64,7 @@
                     <td class="d-none d-sm-table-cell">{{node.isp}}</td>
                     <td class="d-none d-md-table-cell">{{formatBytes(node.todayTrafficIn)}}</td>
                     <td class="d-none d-md-table-cell">{{formatBytes(node.todayTrafficOut)}}</td>
+                    <td class="d-none d-lg-table-cell">v{{node.version || '1'}}</td>
                     <td :class="[node.status == 'online' ? 'text-success' : 'text-danger']">{{node.status}}</td>
                     <td class="d-none d-lg-table-cell">{{node.banner}}</td>
                 </tr>
@@ -134,8 +136,8 @@ docker logs -f blackbox
                     this.createMessage({ content: e.reason, type: 'error' });
                     e.preventDefault && e.preventDefault();
                 });
-                // every 60 seconds
-                setInterval(() => this.get_nodes(), 60000);
+                // every 30 seconds
+                setInterval(() => this.get_nodes(), 30000);
                 this.get_nodes();
             },
             methods: {
