@@ -24,6 +24,8 @@
 
 ### 使用二进制文件
 
+[前往版本发布页](https://github.com/opentdp/blackbox/releases)下载合适的二进制文件。修改环境变量后运行响应的代码。
+
 ```shell
 NODE_NAME=your-node-name
 NODE_OWNER=your-nickname
