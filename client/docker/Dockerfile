@@ -18,6 +18,9 @@ ENV NODE_NAME= \
     NODE_ISP= \
     NODE_BANNER=
 
+HEALTHCHECK --interval=30s --timeout=5s \
+    CMD wget -spider http://localhost:9115/-/healthy || exit 1
+
 ENTRYPOINT ["tdp-server"]
 
-EXPOSE 9115
+EXPOSE 9000
