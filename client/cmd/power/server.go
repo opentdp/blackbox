@@ -14,8 +14,8 @@ import (
 func metaServer() {
 	engine := httpd.Engine(false)
 
-	engine.GET("/tdp/ps", ps)
-	engine.GET("/tdp/meta", meta)
+	engine.GET("/api/ps", ps)
+	engine.GET("/api/meta", meta)
 
 	engine.NoRoute(forward())
 
