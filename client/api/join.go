@@ -8,7 +8,12 @@ import (
 )
 
 func Join() error {
-	body, err := httpPost("/api/join", args.VersionNumber+";"+args.Token)
+	token := args.VersionNumber
+	for _, value := range args.NodeMetaInfo {
+		token += ";" + value
+	}
+
+	body, err := httpPost("/api/join", token)
 	if err != nil {
 		return err
 	}
