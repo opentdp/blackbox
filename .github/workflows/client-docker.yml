@@ -2,7 +2,7 @@ name: TDP Blackbox Docker Push
 
 on:
   release:
-    types: [created]
+    types: [released]
   push:
     paths:
     - 'client/docker/**'
