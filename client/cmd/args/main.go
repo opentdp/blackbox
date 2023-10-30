@@ -30,10 +30,10 @@ func init() {
 
 	// get NodeMetaInfo
 	NodeMetaInfo = map[string]string{
-		"name":   os.Getenv("NODE_NAME"),
-		"owner":  os.Getenv("NODE_OWNER"),
-		"region": os.Getenv("NODE_REGION"),
-		"isp":    os.Getenv("NODE_ISP"),
-		"banner": os.Getenv("NODE_BANNER"),
+		"Name":   os.Getenv("NODE_NAME"),
+		"Owner":  os.Getenv("NODE_OWNER"),
+		"Region": os.Getenv("NODE_REGION"),
+		"ISP":    os.Getenv("NODE_ISP"),
+		"Banner": os.Getenv("NODE_BANNER"),
 	}
 }
