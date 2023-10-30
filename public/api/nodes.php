@@ -28,6 +28,7 @@ foreach ($proxies as &$node) {
     if (is_file($config_file)) {
         $config = array_merge($config, include($config_file));
         $output[$node['name']] = $config;
+        touch($config_file);
     }
 }
 
