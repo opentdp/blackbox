@@ -42,6 +42,7 @@ tdp-blackbox
 docker run -d \
     --name blackbox \
     --restart always \
+    --cap-add=NET_ADMIN \
     --publish 9115:9115 \
     --env "NODE_NAME=your-node-name" \
     --env "NODE_OWNER=your-nickname" \
