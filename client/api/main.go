@@ -15,7 +15,7 @@ func Join(token, etcPath string) error {
 		return err
 	}
 	if !strings.Contains(body, "===================") {
-		return errors.New("join cluster failed\n" + body)
+		return errors.New("Join cluster failed\n" + body)
 	}
 	config := strings.Split(body, "===================")
 	err = writeFile(etcPath+"/frpc.toml", config[0])
