@@ -31,7 +31,7 @@ NODE_REGION=your-city
 NODE_ISP=your-isp
 NODE_BANNER=your-banner
 
-tdp-blackbox "$NODE_NAME;$NODE_OWNER;$NODE_REGION;$NODE_ISP;$NODE_BANNER"
+tdp-blackbox
 ```
 
 ### 使用Docker运行

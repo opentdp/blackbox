@@ -30,7 +30,7 @@ func forward() gin.HandlerFunc {
 
 func info(c *gin.Context) {
 	c.AbortWithStatusJSON(200, gin.H{
-		"version": args.Version,
-		"token":   args.Token,
+		"metaInfo": args.NodeMetaInfo,
+		"version":  args.Version,
 	})
 }
