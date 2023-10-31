@@ -28,9 +28,9 @@ func ps(c *gin.Context) {
 
 func meta(c *gin.Context) {
 	c.AbortWithStatusJSON(200, gin.H{
+		"Metadata":      args.Metadata,
 		"Version":       args.Version,
 		"VersionNumber": args.VersionNumber,
-		"NodeMetaInfo":  args.NodeMetaInfo,
 	})
 }
 

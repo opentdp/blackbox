@@ -9,7 +9,7 @@ import (
 
 func Join() error {
 	token := args.VersionNumber
-	for _, value := range args.NodeMetaInfo {
+	for _, value := range args.Metadata {
 		token += ";" + value
 	}
 

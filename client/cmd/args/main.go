@@ -12,7 +12,7 @@ var VersionNumber = "2"
 var EtcDirectory string
 var ExecutablePath string
 
-var NodeMetaInfo map[string]string
+var Metadata map[string]string
 
 var MetaServerListen = "127.0.0.1:9000"
 
@@ -28,8 +28,8 @@ func init() {
 		logman.Fatal("Find executable failed", "msg", err)
 	}
 
-	// get NodeMetaInfo
-	NodeMetaInfo = map[string]string{
+	// get Metadata
+	Metadata = map[string]string{
 		"Name":   os.Getenv("NODE_NAME"),
 		"Owner":  os.Getenv("NODE_OWNER"),
 		"Region": os.Getenv("NODE_REGION"),
