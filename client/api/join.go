@@ -8,12 +8,16 @@ import (
 )
 
 func Join() error {
-	token := args.VersionNumber
-	for _, value := range args.Metadata {
-		token += ";" + value
+	token := []string{
+		args.VersionNumber,
+		args.Metadata["Name"],
+		args.Metadata["Owner"],
+		args.Metadata["Region"],
+		args.Metadata["ISP"],
+		args.Metadata["Banner"],
 	}
 
-	body, err := httpPost("/api/join", token)
+	body, err := httpPost("/api/join", strings.Join(token, ";"))
 	if err != nil {
 		return err
 	}
