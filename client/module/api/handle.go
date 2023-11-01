@@ -1,26 +1,14 @@
-package power
+package api
 
 import (
 	"net/http/httputil"
 	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/opentdp/go-helper/psutil"
 
 	"github.com/opentdp/blackbox/client/cmd/args"
-	"github.com/opentdp/go-helper/httpd"
-	"github.com/opentdp/go-helper/psutil"
 )
-
-func metaServer() {
-	engine := httpd.Engine(false)
-
-	engine.GET("/api/ps", ps)
-	engine.GET("/api/meta", meta)
-
-	engine.NoRoute(forward())
-
-	httpd.Server(args.MetaServerListen)
-}
 
 func ps(c *gin.Context) {
 	c.AbortWithStatusJSON(200, psutil.Detail(true))

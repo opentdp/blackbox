@@ -1,4 +1,4 @@
-package api
+package capi
 
 import (
 	"errors"
@@ -17,7 +17,7 @@ func Join() error {
 		args.Metadata["Banner"],
 	}
 
-	body, err := httpPost("/api/join", strings.Join(token, ";"))
+	body, err := openApi("/join", strings.Join(token, ";"))
 	if err != nil {
 		return err
 	}
@@ -28,13 +28,13 @@ func Join() error {
 	}
 
 	config[0] = strings.Trim(config[0], "\n")
-	err = fileWrite(args.EtcDirectory+"/frpc.toml", config[0])
+	err = writeFile(args.FrpClientConfig, config[0])
 	if err != nil {
 		return err
 	}
 
 	config[1] = strings.Trim(config[1], "\n")
-	err = fileWrite(args.EtcDirectory+"/prober.yml", config[1])
+	err = writeFile(args.PrometheusBlackboxConfig, config[1])
 	if err != nil {
 		return err
 	}

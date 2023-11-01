@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package frpc
+package frp_client
 
 import (
 	_ "github.com/fatedier/frp/assets/frpc"
 	"github.com/fatedier/frp/cmd/frpc/sub"
 )
 
-func Start() {
+func Execute() {
 	sub.Execute()
 }

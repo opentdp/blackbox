@@ -11,7 +11,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package prober
+package prometheus_blackbox
 
 import (
 	"fmt"
@@ -61,7 +61,7 @@ func init() {
 	prometheus.MustRegister(version.NewCollector("blackbox_exporter"))
 }
 
-func Start() {
+func Execute() {
 	os.Exit(run())
 }
 

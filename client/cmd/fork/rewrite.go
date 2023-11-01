@@ -1,27 +1,16 @@
-package power
+package fork
 
 import (
 	"os"
 	"os/exec"
 
-	"github.com/opentdp/blackbox/client/api"
-	"github.com/opentdp/blackbox/client/cmd/args"
 	"github.com/opentdp/go-helper/logman"
+
+	"github.com/opentdp/blackbox/client/cmd/args"
 )
 
-func Start() {
-	if err := api.Join(); err != nil {
-		logman.Fatal("Fetch config failed", "msg", err)
-	}
-
-	go forkFrps()
-	go forkProber()
-
-	metaServer()
-}
-
-func forkFrps() {
-	etc := args.EtcDirectory + "/frpc.toml"
+func forkFrpClient() {
+	etc := args.FrpClientConfig
 	cmd := exec.Command(args.ExecutablePath, "--config", etc)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 
@@ -31,13 +20,13 @@ func forkFrps() {
 	cmd.Wait()
 }
 
-func forkProber() {
-	etc := args.EtcDirectory + "/prober.yml"
+func forkPrometheusBlackbox() {
+	etc := args.PrometheusBlackboxConfig
 	cmd := exec.Command(args.ExecutablePath, "--config.file", etc)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 
 	if err := cmd.Start(); err != nil {
-		logman.Fatal("Start prober failed", "msg", err)
+		logman.Fatal("Start prometheus blackbox failed", "msg", err)
 	}
 	cmd.Wait()
 }
