@@ -10,7 +10,7 @@ include dirname(__DIR__) . '/vendor.php';
 // fetch nodes
 
 if (!$proxies = get_nodes($_GET['name'] ?? '')) {
-    exit(json_encode(['error' => 'server failed']));
+    exit(json_encode(['error' => 'not found']));
 }
 
 $output = [];

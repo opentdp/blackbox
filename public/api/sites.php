@@ -10,9 +10,8 @@ include dirname(__DIR__) . '/vendor.php';
 // fetch sites
 
 if (!$sites = get_sites($_GET['name'] ?? '')) {
-    exit(json_encode(['error' => 'site failed']));
+    exit(json_encode(['error' => 'not found']));
 }
-
 
 ksort($sites);
 
