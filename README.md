@@ -56,3 +56,9 @@ docker run -d \
 # 查看注册日志
 docker logs -f blackbox
 ```
+
+## 微信交流群
+
+扫码添加开发者好友（请备注 `OpenTDP 拨测`，无备注可能无法通过好友申请或拉群）
+
+![](http://docs.opentdp.org/static/weixin-qr.jpg)
