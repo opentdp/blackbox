@@ -2,7 +2,7 @@
 <html dir="ltr" lang="zh-CN">
 
 <head>
-    <title>Prometheus 任务 | OpenTDP 云边拨测</title>
+    <title>Grafana 大屏 | OpenTDP 云边拨测</title>
     <meta charset="utf-8" />
     <!-- empty csp -->
     <meta http-equiv="Content-Security-Policy" />
@@ -47,10 +47,10 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item active" href="/prometheus_config">Prometheus 任务</a>
+                                    <a class="dropdown-item" href="/prometheus_config">Prometheus 任务</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="/grafana_config">Grafana 大屏</a>
+                                    <a class="dropdown-item active" href="/grafana_config">Grafana 大屏</a>
                                 </li>
                             </ul>
                         </li>
@@ -61,33 +61,15 @@
     </header>
 
     <div id="app" class="container-xxl main py-3">
-        <pre class="mb-0">
-scrape_configs:
-        </pre>
-        <pre class="mb-0" v-for="(node, name, index) in nodes">
-  # http_status_{{node.name}}
-  - job_name: http_status_{{node.name}}
-    metrics_path: /probe
-    params:
-      module:
-        - http_2xx
-    file_sd_configs:
-      - files:
-          - /etc/prometheus/http_status.yaml
-        refresh_interval: 60m
-    relabel_configs:
-      - target_label: region
-        replacement: "{{node.region}},{{node.isp}},{{node.owner}},{{node.banner}}"
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: {{node.name}}.blackbox.opentdp.org:80
-    basic_auth:
-        username: your-username
-        password: your-password
-        </pre>
+        <div>
+            <p>
+                <a href="https://www.rehiy.com/usr/uploads/2023/10/2679711440.json?v13" target="_blank">点击这里</a>下载 Grafana 大屏配置文件，
+                配置文件来源：<a href="https://www.rehiy.com/post/556/" target="_blank">Kubernetes 集群上安装 Blackbox 监控网站状态</a>。
+            </p>
+            <h3>大屏效果图</h3>
+            <img src="https://www.rehiy.com/usr/uploads/2023/10/2144835887.png" />
+            <img src="https://www.rehiy.com/usr/uploads/2023/10/3315483109.png" />
+        </div>
     </div>
 
     <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
@@ -114,23 +96,8 @@ scrape_configs:
                     this.createMessage({ content: e.reason, type: 'error' });
                     e.preventDefault && e.preventDefault();
                 });
-                // every 30 seconds
-                setInterval(() => this.get_nodes(), 30000);
-                this.get_nodes();
             },
             methods: {
-                get_nodes() {
-                    const url = '/api/nodes';
-                    fetch(url).then(r => r.json()).then(data => {
-                        const nodes = {};
-                        Object.keys(data).forEach(name => {
-                            if (data[name].status === 'online') {
-                                nodes[name] = data[name];
-                            }
-                        });
-                        this.nodes = nodes;
-                    });
-                },
                 createMessage(data) {
                     this.messages.push({
                         index: Date.now(), type: 'success', ...data

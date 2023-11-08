@@ -1,3 +1,3 @@
 <?php
 
-header('Location: /status');
+header('Location: /home');
