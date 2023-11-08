@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+
+<head>
+    <title>Grafana 大屏 | OpenTDP 云边拨测</title>
+    <meta charset="utf-8" />
+    <!-- empty csp -->
+    <meta http-equiv="Content-Security-Policy" />
+    <!-- viewport-fix -->
+    <meta name="viewport" content="viewport-fit=cover,width=device-width,initial-scale=1,user-scalable=no" />
+    <!-- browser webapp style -->
+    <meta name="theme-color" content="#1b86ca" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <!-- static css files -->
+    <link rel="icon" type="image/png" href="/static/icon.png" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-icons/bootstrap-icons.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.127" />
+    <!-- static js files -->
+    <script type="text/javascript" src="/static/bootstrap/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/static/vue-global/vue.global.js"></script>
+    <script type="text/javascript" src="/static/vue-global/vue-router.global.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary mb-2">
+            <div class="container-xxl">
+                <a class="navbar-brand" href="./" title="OpenTDP 云边拨测">
+                    <img src="/static/icon.png" height="26" />
+                    &nbsp; 云边拨测
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" href="/status">节点状态</a>
+                        <a class="nav-link" href="https://github.com/opentdp/blackbox" target="_blank">贡献节点</a>
+                        <a class="nav-link" href="https://grafana.opentdp.org/d/xtkCtBkiz/websites-overview?orgId=1&refresh=30s" target="_blank">查看大屏</a>
+                        <li class="nav-item dropdown active">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                配置指南
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="/prometheus_config">Prometheus 任务</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item active" href="/grafana_blackbox">Grafana 大屏</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="app" class="container-xxl main py-3">
+        <div>
+            <p>
+                <a href="https://www.rehiy.com/usr/uploads/2023/10/2679711440.json?v13" target="_blank">点击这里</a>下载 Grafana 大屏配置文件，
+                配置文件来源：<a href="https://www.rehiy.com/post/556/" target="_blank">Kubernetes 集群上安装 Blackbox 监控网站状态</a>。
+            </p>
+            <h3>大屏效果图</h3>
+            <img src="https://www.rehiy.com/usr/uploads/2023/10/2144835887.png" />
+            <img src="https://www.rehiy.com/usr/uploads/2023/10/3315483109.png" />
+        </div>
+    </div>
+
+    <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
+        <div class="container-xxl py-2 py-md-3 text-body-secondary">
+            <img class="mb-3" src="/static/logo.png" alt="OpenTDP" height="60">
+            <div class="mb-2">开放、共建、共享的云和边缘拨测集群</div>
+            <div>前端界面由<a href="https://www.rehiy.com">若海</a>基于 Bootstrap&Vue 构建</div>
+        </div>
+    </footer>
+
+    <script type="text/javascript">
+        Vue.createApp({
+            data() {
+                return {
+                    messages: [],
+                    nodes: {},
+                }
+            },
+            created() {
+                window.addEventListener('message', e => {
+                    e.data.content && this.createMessage(e.data);
+                });
+                window.addEventListener('unhandledrejection', e => {
+                    this.createMessage({ content: e.reason, type: 'error' });
+                    e.preventDefault && e.preventDefault();
+                });
+            },
+            methods: {
+                createMessage(data) {
+                    this.messages.push({
+                        index: Date.now(), type: 'success', ...data
+                    });
+                },
+                removeMessage(idx) {
+                    this.messages = this.messages.filter(m => m.index !== idx);
+                },
+                formatBytes(bytes, decimals = 2) {
+                    if (bytes === 0) return '0 Bytes';
+
+                    const k = 1024;
+                    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+                    const i = Math.floor(Math.log(bytes) / Math.log(k));
+                    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
+                }
+            }
+        }).mount('#app')
+    </script>
+
+</body>
+
+</html>
