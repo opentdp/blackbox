@@ -61,33 +61,14 @@
     </header>
 
     <div id="app" class="container-xxl main py-3">
-        <pre class="mb-0">
-scrape_configs:
-        </pre>
-        <pre class="mb-0" v-for="(node, name, index) in nodes">
-  # http_status_{{node.name}}
-  - job_name: http_status_{{node.name}}
-    metrics_path: /probe
-    params:
-      module:
-        - http_2xx
-    file_sd_configs:
-      - files:
-          - /etc/prometheus/http_status.yaml
-        refresh_interval: 60m
-    relabel_configs:
-      - target_label: region
-        replacement: "{{node.region}},{{node.isp}},{{node.owner}},{{node.banner}}"
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: {{node.name}}.blackbox.opentdp.org:80
-    basic_auth:
-        username: your-username
-        password: your-password
-        </pre>
+        <div>
+            <p>
+                以下为注册到 OpenTDP 云边拨测服务的全量节点 Prometheus 配置，请注意修改授权密码后使用。
+            </p>
+        </div>
+
+        <h3>Prometheus 配置</h3>
+        <textarea class="form-control" rows="30">{{yaml}}</textarea>
     </div>
 
     <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
@@ -104,6 +85,7 @@ scrape_configs:
                 return {
                     messages: [],
                     nodes: {},
+                    yaml: '',
                 }
             },
             created() {
@@ -115,11 +97,11 @@ scrape_configs:
                     e.preventDefault && e.preventDefault();
                 });
                 // every 30 seconds
-                setInterval(() => this.get_nodes(), 30000);
-                this.get_nodes();
+                setInterval(() => this.getNodes(), 30000);
+                this.getNodes();
             },
             methods: {
-                get_nodes() {
+                getNodes() {
                     const url = '/api/nodes';
                     fetch(url).then(r => r.json()).then(data => {
                         const nodes = {};
@@ -129,7 +111,36 @@ scrape_configs:
                             }
                         });
                         this.nodes = nodes;
+                        this.yaml = this.createYaml(nodes);
                     });
+                },
+                createYaml(nodes) {
+                    const yamlLines = [`scrape_configs:`];
+                    for (const node of Object.values(nodes)) {
+                        yamlLines.push(`  # http_status_${node.name}`)
+                        yamlLines.push(`  - job_name: http_status_${node.name}`)
+                        yamlLines.push(`    metrics_path: /probe`)
+                        yamlLines.push(`    params:`)
+                        yamlLines.push(`      module:`)
+                        yamlLines.push(`        - http_2xx`)
+                        yamlLines.push(`    file_sd_configs:`)
+                        yamlLines.push(`      - files:`)
+                        yamlLines.push(`          - /etc/prometheus/http_status.yaml`)
+                        yamlLines.push(`        refresh_interval: 60m`)
+                        yamlLines.push(`    relabel_configs:`)
+                        yamlLines.push(`      - target_label: region`)
+                        yamlLines.push(`        replacement: "${node.region},${node.isp},${node.owner},${node.banner}"`)
+                        yamlLines.push(`      - source_labels: [__address__]`)
+                        yamlLines.push(`        target_label: __param_target`)
+                        yamlLines.push(`      - source_labels: [__param_target]`)
+                        yamlLines.push(`        target_label: instance`)
+                        yamlLines.push(`      - target_label: __address__`)
+                        yamlLines.push(`        replacement: ${node.name}.blackbox.opentdp.org:80`)
+                        yamlLines.push(`    basic_auth:`)
+                        yamlLines.push(`        username: your-username`)
+                        yamlLines.push(`        password: your-password`)
+                    }
+                    return yamlLines.join('\n');
                 },
                 createMessage(data) {
                     this.messages.push({
