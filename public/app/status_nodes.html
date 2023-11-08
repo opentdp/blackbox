@@ -49,7 +49,7 @@
                                     <a class="dropdown-item" href="/prometheus_config">Prometheus 配置</a>
                                 </li>
                                 <li>
-                                    <a class="dropdown-item" href="/grafana_config">Grafana 大屏</a>
+                                    <a class="dropdown-item" href="/grafana_config">Grafana 仪表盘</a>
                                 </li>
                             </ul>
                         </li>
@@ -66,7 +66,7 @@
             </p>
         </div>
 
-        <h3>节点状态 ({{Object.keys(nodes).length}})</h3>
+        <h3>节点状态 (<span class="text-success">{{nodesOnline}}</span>/{{nodesCount}})</h3>
         <table class="table table-striped table-hover">
             <thead class="table-light">
                 <tr>
@@ -117,6 +117,8 @@
                 return {
                     messages: [],
                     nodes: {},
+                    nodesCount: 0,
+                    nodesOnline: 0,
                 };
             },
             created() {
@@ -138,6 +140,13 @@
                         .then((r) => r.json())
                         .then((data) => {
                             this.nodes = data;
+                            this.nodesCount = this.nodesOnline = 0;
+                            Object.keys(data).forEach(name => {
+                                if (data[name].status === 'online') {
+                                    this.nodesOnline++;
+                                }
+                                this.nodesCount++;
+                            });
                         });
                 },
                 createMessage(data) {

@@ -38,8 +38,8 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a class="nav-link" href="/home">首页</a>
-                        <a class="nav-link" href="/status_nodes">节点状态</a>
-                        <a class="nav-link" href="/provide_nodes">贡献节点</a>
+                        <a class="nav-link" href="/status_sites">节点状态</a>
+                        <a class="nav-link" href="/provide_sites">贡献节点</a>
                         <a class="nav-link" href="https://grafana.opentdp.org/d/xtkCtBkiz/websites-overview?orgId=1&refresh=30s" target="_blank">查看大屏</a>
                         <li class="nav-item dropdown active">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,32 +61,11 @@
     </header>
 
     <div id="app" class="container-xxl main py-3">
-        <pre class="mb-0">
-scrape_configs:
-        </pre>
-        <pre class="mb-0" v-for="(node, name, index) in nodes">
-  # http_status_{{node.name}}
-  - job_name: http_status_{{node.name}}
-    metrics_path: /probe
-    params:
-      module:
-        - http_2xx
-    file_sd_configs:
-      - files:
-          - /etc/prometheus/http_status.yaml
-        refresh_interval: 60m
-    relabel_configs:
-      - target_label: region
-        replacement: "{{node.region}},{{node.isp}},{{node.owner}},{{node.banner}}"
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: {{node.name}}.blackbox.opentdp.org:80
-    basic_auth:
-        username: your-username
-        password: your-password
+        <pre class="mb-0" v-for="(site, name, index) in sites">
+- targets:<template v-for="url in site.targets">
+    - {{url}}</template>
+  labels:<template v-for="(value, key, index) in site.labels">
+    {{key}}: {{value}}</template>
         </pre>
     </div>
 
@@ -103,7 +82,7 @@ scrape_configs:
             data() {
                 return {
                     messages: [],
-                    nodes: {},
+                    sites: {},
                 }
             },
             created() {
@@ -115,20 +94,14 @@ scrape_configs:
                     e.preventDefault && e.preventDefault();
                 });
                 // every 30 seconds
-                setInterval(() => this.get_nodes(), 30000);
-                this.get_nodes();
+                setInterval(() => this.get_sites(), 30000);
+                this.get_sites();
             },
             methods: {
-                get_nodes() {
-                    const url = '/api/nodes';
+                get_sites() {
+                    const url = '/api/sites';
                     fetch(url).then(r => r.json()).then(data => {
-                        const nodes = {};
-                        Object.keys(data).forEach(name => {
-                            if (data[name].status === 'online') {
-                                nodes[name] = data[name];
-                            }
-                        });
-                        this.nodes = nodes;
+                        this.sites = data;
                     });
                 },
                 createMessage(data) {
