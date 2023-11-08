@@ -7,7 +7,7 @@ RUN sh /ifs/deploy
 
 FROM alpine
 
-LABEL version="v0.2.2" \
+LABEL version="v0.2.4" \
     maintainer="wang@rehiy.com"
 
 COPY --from=builder /usr/local/bin/tdp-* /usr/local/bin/
@@ -21,6 +21,6 @@ ENV NODE_NAME= \
 HEALTHCHECK --interval=30s --timeout=5s \
     CMD wget --spider http://localhost:9115/-/healthy || exit 1
 
-ENTRYPOINT ["tdp-server"]
+ENTRYPOINT ["tdp-daemon"]
 
 EXPOSE 9000
