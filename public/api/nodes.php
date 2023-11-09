@@ -6,7 +6,7 @@ if (isset($_GET['format']) && in_array($_GET['format'], ['yaml'])) {
 }
 
 header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST');
+header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type');
 header('Content-Type: application/' . $format . ';charset=utf-8');
 
