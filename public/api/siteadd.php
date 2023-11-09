@@ -7,26 +7,42 @@ header('Content-Type: application/json;charset=utf-8');
 
 include dirname(__DIR__) . '/vendor.php';
 
+// check formdata
+
 $post = json_decode(file_get_contents('php://input'), true);
 
-if (empty($post) || empty($post['project']) || empty($post['targets']) || empty($post['email']) || empty($post['desc'])) {
+if (empty($post)) {
     exit('{"error":1,"message":"表单项不能为空"}');
+}
+
+if (empty($post['project'])) {
+    exit('{"error":1,"message":"名称不能为空"}');
+}
+
+if (empty($post['targets'])) {
+    exit('{"error":1,"message":"网址不能为空"}');
 }
 
 $post['targets'] = array_filter(explode("\n", $post['targets']));
 foreach ($post['targets'] as $target) {
     if (!filter_var($target, FILTER_VALIDATE_URL)) {
-        exit('{"error":1,"message":"站点地址校验失败"}');
+        exit('{"error":1,"message":"站点地址无效"}');
     }
 }
 
 if (!empty($post['logo']) && !filter_var($post['logo'], FILTER_VALIDATE_URL)) {
-    exit('{"error":1,"message":"图标地址校验失败"}');
+    exit('{"error":1,"message":"图标地址无效"}');
 }
 
-if (!filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
-    exit('{"error":1,"message":"邮箱校验失败"}');
+if (empty($post['email']) || !filter_var($post['email'], FILTER_VALIDATE_EMAIL)) {
+    exit('{"error":1,"message":"邮箱格式错误"}');
 }
+
+if (empty($post['desc'])) {
+    exit('{"error":1,"message":"描述不能为空"}');
+}
+
+// save site config
 
 $config = [
     'targets' => $post['targets'],
