@@ -3,7 +3,7 @@
  * @author rehiy[wang@rehiy.com]
  */
 
- a {
+a {
     text-decoration: none;
     outline: 0;
 }
@@ -35,4 +35,11 @@ pre code {
 
 .container-xxl img {
     max-width: 100%;
+}
+
+.messages {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1999;
 }

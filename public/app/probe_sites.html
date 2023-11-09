@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="/static/icon.png" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap-icons/bootstrap-icons.min.css" />
-    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.127" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.129" />
     <!-- static js files -->
     <script type="text/javascript" src="/static/bootstrap/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/static/vue-global/vue.global.js"></script>
@@ -68,7 +68,18 @@
             </p>
         </div>
 
-        <h3>站点列表 ({{Object.keys(sites).length}})</h3>
+
+        <div class="d-flex">
+            <div class="flex-grow-1">
+                <h3>站点列表 ({{Object.keys(sites).length}})</h3>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#submitSite">
+                    添加站点
+                </button>
+            </div>
+        </div>
+
         <table class="table table-striped table-hover">
             <thead class="table-light">
                 <tr>
@@ -85,6 +96,51 @@
                 </tr>
             </tbody>
         </table>
+
+        <div class="modal" tabindex="-1" id="submitSite">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">提交站点</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="site-project" class="form-label">名称</label>
+                            <input type="text" class="form-control" id="site-project" v-model="siteForm.project">
+                        </div>
+                        <div class="mb-3">
+                            <label for="site-targets" class="form-label">网址</label>
+                            <input type="url" class="form-control" id="site-targets" placeholder="https://example.org" v-model="siteForm.targets">
+                        </div>
+                        <div class="mb-3">
+                            <label for="site-logo" class="form-label">图标</label>
+                            <input type="url" class="form-control" id="site-logo" placeholder="https://example.org/logo.png" v-model="siteForm.logo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="site-email" class="form-label">邮箱</label>
+                            <input type="email" class="form-control" id="site-email" placeholder="name@example.org" v-model="siteForm.email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="site-desc" class="form-label">描述</label>
+                            <textarea class="form-control" id="site-desc" placeholder="我写的代码怎么可能有BUG" v-model="siteForm.desc"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" @click="submitSiteForm">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="messages d-grid gap-2 p-3" v-if="messages.length > 0">
+            <div v-for="item in messages" :key="item.index" class="toast align-items-center show" :class="{'text-bg-danger': item.type == 'error'}">
+                <div class="d-flex">
+                    <div class="toast-body">{{ item.content }}</div>
+                    <button class="btn-close me-2 m-auto" @click="removeMessage(item.index)"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
@@ -100,6 +156,13 @@
             data() {
                 return {
                     messages: [],
+                    siteForm: {
+                        project: "",
+                        targets: "",
+                        logo: "",
+                        email: "",
+                        desc: "",
+                    },
                     sites: {},
                 }
             },
@@ -112,14 +175,26 @@
                     e.preventDefault && e.preventDefault();
                 });
                 // every 30 seconds
-                setInterval(() => this.get_sites(), 30000);
-                this.get_sites();
+                setInterval(() => this.getSites(), 30000);
+                this.getSites();
             },
             methods: {
-                get_sites() {
+                getSites() {
                     const url = '/api/sites';
                     fetch(url).then(r => r.json()).then(data => {
                         this.sites = data;
+                    });
+                },
+                submitSiteForm() {
+                    const url = '/api/siteadd'
+                    const body = JSON.stringify(this.siteForm);
+                    fetch(url, { method: 'POST', body: body }).then(r => r.json()).then(data => {
+                        if (data.message) {
+                            if (data.error > 0) {
+                                throw new Error(data.message);
+                            }
+                            this.createMessage(data.message);
+                        }
                     });
                 },
                 createMessage(data) {
@@ -129,15 +204,6 @@
                 },
                 removeMessage(idx) {
                     this.messages = this.messages.filter(m => m.index !== idx);
-                },
-                formatBytes(bytes, decimals = 2) {
-                    if (bytes === 0) return '0 Bytes';
-
-                    const k = 1024;
-                    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-                    const i = Math.floor(Math.log(bytes) / Math.log(k));
-                    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
                 }
             }
         }).mount('#app')
