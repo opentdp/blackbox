@@ -16,7 +16,7 @@
     <link rel="icon" type="image/png" href="/static/icon.png" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/static/bootstrap-icons/bootstrap-icons.min.css" />
-    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.127" />
+    <link rel="stylesheet" type="text/css" href="/static/style.css?v1.129" />
     <!-- static js files -->
     <script type="text/javascript" src="/static/bootstrap/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/static/vue-global/vue.global.js"></script>
@@ -70,6 +70,15 @@
             <img src="https://www.rehiy.com/usr/uploads/2023/10/2144835887.png" />
             <img src="https://www.rehiy.com/usr/uploads/2023/10/3315483109.png" />
         </div>
+
+        <div class="messages d-grid gap-2 p-3" v-if="messages.length > 0">
+            <div v-for="item in messages" :key="item.index" class="toast align-items-center show" :class="{'text-bg-danger': item.type == 'error'}">
+                <div class="d-flex">
+                    <div class="toast-body">{{ item.content }}</div>
+                    <button class="btn-close me-2 m-auto" @click="removeMessage(item.index)"></button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer class="navbar-fixed-bottom bd-footer bg-body-tertiary">
@@ -105,15 +114,6 @@
                 },
                 removeMessage(idx) {
                     this.messages = this.messages.filter(m => m.index !== idx);
-                },
-                formatBytes(bytes, decimals = 2) {
-                    if (bytes === 0) return '0 Bytes';
-
-                    const k = 1024;
-                    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-                    const i = Math.floor(Math.log(bytes) / Math.log(k));
-                    return parseFloat((bytes / Math.pow(k, i)).toFixed(decimals)) + ' ' + sizes[i];
                 }
             }
         }).mount('#app')
