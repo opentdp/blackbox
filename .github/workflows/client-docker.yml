@@ -3,7 +3,7 @@ name: TDP Blackbox Docker Push
 on:
   push:
     paths:
-      - 'client/docker/**'
+      - 'docker/client/**'
 
 jobs:
   build:
@@ -30,7 +30,7 @@ jobs:
       - name: Docker build and push
         uses: docker/build-push-action@v4
         with:
-          context: ./client/docker
+          context: ./docker/client
           platforms: linux/386,linux/amd64,linux/arm64,linux/ppc64le,linux/s390x
           push: true
           tags: |

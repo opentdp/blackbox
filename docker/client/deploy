@@ -31,7 +31,7 @@ tdp_release() {
 wget -O tdp-blackbox.gz $(tdp_release blackbox)
 gunzip tdp-blackbox.gz -c >/usr/local/bin/tdp-blackbox
 
-cp -a /ifs/tdp-server /usr/local/bin/
+cp -a /ifs/tdp-* /usr/local/bin/
 chmod +x /usr/local/bin/*
 
 rm -rf /ifs
