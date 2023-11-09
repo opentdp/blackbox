@@ -15,8 +15,8 @@ if (empty($post)) {
     exit('{"error":1,"message":"表单项不能为空"}');
 }
 
-if (empty($post['project'])) {
-    exit('{"error":1,"message":"名称不能为空"}');
+if (empty($post['secret'])) {
+    exit('{"error":1,"message":"密钥不能为空"}');
 }
 
 if (empty($post['targets'])) {
@@ -24,10 +24,18 @@ if (empty($post['targets'])) {
 }
 
 $post['targets'] = array_filter(explode("\n", $post['targets']));
-foreach ($post['targets'] as $target) {
+foreach ($post['targets'] as &$target) {
+    $target = trim($target, '/');
     if (!filter_var($target, FILTER_VALIDATE_URL)) {
         exit('{"error":1,"message":"站点地址无效"}');
     }
+    if (!check_site($target, $post['secret'])) {
+        exit('{"error":1,"message":"站点验证失败"}');
+    }
+}
+
+if (empty($post['project'])) {
+    exit('{"error":1,"message":"名称不能为空"}');
 }
 
 if (!empty($post['logo']) && !filter_var($post['logo'], FILTER_VALIDATE_URL)) {
@@ -49,6 +57,7 @@ $config = [
     'labels' => [
         'project' => $post['project'],
         'email' => $post['email'],
+        'logo' => $post['logo'],
         'desc' => $post['desc'],
     ]
 ];

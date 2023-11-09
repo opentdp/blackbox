@@ -21,6 +21,7 @@
     <script type="text/javascript" src="/static/bootstrap/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="/static/vue-global/vue.global.js"></script>
     <script type="text/javascript" src="/static/vue-global/vue-router.global.js"></script>
+    <script type="text/javascript" src="/static/md5.js?v1"></script>
 </head>
 
 <body>
@@ -111,25 +112,60 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="site-project" class="form-label">名称</label>
-                            <input type="text" class="form-control" id="site-project" v-model="siteForm.project">
-                        </div>
-                        <div class="mb-3">
-                            <label for="site-targets" class="form-label">网址</label>
-                            <input type="url" class="form-control" id="site-targets" placeholder="https://example.org" v-model="siteForm.targets">
-                        </div>
-                        <div class="mb-3">
-                            <label for="site-logo" class="form-label">图标</label>
-                            <input type="url" class="form-control" id="site-logo" placeholder="https://example.org/logo.png" v-model="siteForm.logo">
-                        </div>
-                        <div class="mb-3">
-                            <label for="site-email" class="form-label">邮箱</label>
-                            <input type="email" class="form-control" id="site-email" placeholder="name@example.org" v-model="siteForm.email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="site-desc" class="form-label">描述</label>
-                            <textarea class="form-control" id="site-desc" placeholder="我写的代码怎么可能有BUG" v-model="siteForm.desc"></textarea>
+                        <div class="accordion" id="accordionSubmitSite">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                        验证所有权
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionSubmitSite">
+                                    <div class="accordion-body">
+                                        <div class="mb-3">
+                                            <label for="site-secret" class="form-label">密码</label>
+                                            <input type="secret" class="form-control" id="site-secret" placeholder="用于生成站点验证信息" v-model="siteForm.secret">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="site-targets" class="form-label">网址</label>
+                                            <input type="url" class="form-control" id="site-targets" placeholder="https://example.org" v-model="siteForm.targets">
+                                        </div>
+                                        <div class="alert alert-warning" role="alert" v-if="!siteForm.secret || !/^https?:\/\/[a-z-0-9]+\.[a-z-0-9]+/.test(siteForm.targets)">
+                                            请输入密码和网址获取验证密钥。
+                                        </div>
+                                        <div class="alert alert-warning" role="alert" v-else>
+                                            请在页面 <b>{{siteForm.targets}}</b> 或 <b>{{siteForm.targets}}/opentdp.txt</b> 中添加 <code>{{md5(siteForm.targets+siteForm.secret)}}</code> 以完成验证。
+                                            验证成功后，请勿删除验证信息，您输入的密码仍将作为修改站点的凭据。本站不会保存您的密码和校验码，请自行妥善保管。
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                        站点扩展信息
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionSubmitSite">
+                                    <div class="accordion-body">
+                                        <div class="mb-3">
+                                            <label for="site-project" class="form-label">名称</label>
+                                            <input type="text" class="form-control" id="site-project" v-model="siteForm.project">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="site-logo" class="form-label">图标</label>
+                                            <input type="url" class="form-control" id="site-logo" placeholder="https://example.org/logo.png" v-model="siteForm.logo">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="site-email" class="form-label">邮箱</label>
+                                            <input type="email" class="form-control" id="site-email" placeholder="name@example.org" v-model="siteForm.email">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="site-desc" class="form-label">描述</label>
+                                            <textarea class="form-control" id="site-desc" placeholder="我写的代码怎么可能有BUG" v-model="siteForm.desc"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -140,7 +176,7 @@
         </div>
 
         <div class="messages d-grid gap-2 p-3" v-if="messages.length > 0">
-            <div v-for="item in messages" :key="item.index" class="toast align-items-center show" :class="{'text-bg-danger': item.type == 'error'}">
+            <div v-for="item in messages" :key="item.index" class="toast align-items-center show" :class="{'text-bg-danger': item.type == 'error', 'text-bg-success': item.type == 'success'}">
                 <div class="d-flex">
                     <div class="toast-body">{{ item.content }}</div>
                     <button class="btn-close me-2 m-auto" @click="removeMessage(item.index)"></button>
@@ -168,6 +204,7 @@
                         logo: "",
                         email: "",
                         desc: "",
+                        secret: "",
                     },
                     sites: {},
                 }
@@ -185,6 +222,9 @@
                 this.getSites();
             },
             methods: {
+                md5(s) {
+                    return Md5.hash(s);
+                },
                 getSites() {
                     const url = '/api/sites';
                     fetch(url).then(r => r.json()).then(data => {
