@@ -16,7 +16,7 @@ if (empty($post)) {
 }
 
 if (empty($post['secret'])) {
-    exit('{"error":1,"message":"密钥不能为空"}');
+    exit('{"error":1,"message":"密码不能为空"}');
 }
 
 if (empty($post['targets'])) {
