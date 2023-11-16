@@ -20,11 +20,11 @@ func Checkin() {
 		logman.Fatal("Fetch config failed", "msg", err)
 	}
 
-	go forkFrpClient()
-	go forkPrometheusBlackbox()
+	forkFrpClient()
+	forkPrometheusBlackbox()
 }
 
-func forkFrpClient() {
+func forkFrpClient() *exec.Cmd {
 	etc := args.FrpClientConfig
 	cmd := exec.Command(args.ExecutablePath, "--config", etc)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
@@ -32,10 +32,10 @@ func forkFrpClient() {
 	if err := cmd.Start(); err != nil {
 		logman.Fatal("Start frpc failed", "msg", err)
 	}
-	cmd.Wait()
+	return cmd
 }
 
-func forkPrometheusBlackbox() {
+func forkPrometheusBlackbox() *exec.Cmd {
 	etc := args.PrometheusBlackboxConfig
 	cmd := exec.Command(args.ExecutablePath, "--config.file", etc)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
@@ -43,5 +43,5 @@ func forkPrometheusBlackbox() {
 	if err := cmd.Start(); err != nil {
 		logman.Fatal("Start prometheus blackbox failed", "msg", err)
 	}
-	cmd.Wait()
+	return cmd
 }
