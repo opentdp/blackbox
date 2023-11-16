@@ -98,6 +98,7 @@ tdp-blackbox</pre>
         <p>参数 <code>--publish 9115:9115</code> 并不是必须的，这决于该节点是否仍需要为其它 Prometheus 提供服务，如果不需要请删除它。</p>
         <div>
             <pre>
+docker pull rehiy/blackbox
 docker run -d \
     --name blackbox \
     --restart always \
@@ -111,7 +112,10 @@ docker run -d \
     rehiy/blackbox
 
 # 查看注册日志
-docker logs -f blackbox</pre>
+docker logs -f blackbox
+
+# 停止并删除容器
+docker rm -rf blackbox</pre>
         </div>
     </div>
 
