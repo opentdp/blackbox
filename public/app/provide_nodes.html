@@ -82,16 +82,19 @@
         </ul>
 
         <h3>使用二进制文件</h3>
-        <p><a href="https://github.com/opentdp/blackbox/releases">前往版本发布页</a>下载合适的二进制文件，参考下面的代码修改环境变量后运行。</p>
+        <p><a href="https://github.com/opentdp/blackbox/releases">前往版本发布页</a>下载合适的二进制文件，参考下面的脚本，修改环境变量，并添加为开机器启动脚本。</p>
         <div>
             <pre>
+#!/bin/sh
+#
+
 NODE_NAME=your-node-name
 NODE_OWNER=your-nickname
 NODE_REGION=your-city
 NODE_ISP=your-isp
 NODE_BANNER=your-banner
 
-tdp-blackbox</pre>
+exec ./tdp-blackbox &</pre>
         </div>
 
         <h3>使用Docker运行</h3>
